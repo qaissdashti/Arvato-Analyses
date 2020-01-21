@@ -31,12 +31,6 @@ from sklearn.cross_validation import cross_val_score
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[ ]:
-
-
-
-
-
 # ## Part 0: Get to Know the Data
 # 
 # There are four data files associated with this project:
@@ -56,8 +50,6 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 # 
 # You'll notice when the data is loaded in that a warning message will immediately pop up. Before you really start digging into the modeling and analysis, you're going to need to perform some cleaning. Take some time to browse the structure of the data and look over the informational spreadsheets to understand the data values. Make some decisions on which features to keep, which features to drop, and if any revisions need to be made on data formats. It'll be a good idea to create a function with pre-processing steps, since you'll need to clean all of the datasets before you work with them.
 
-# In[2]:
-
 
 # load in the data
 
@@ -65,41 +57,11 @@ azdias = pd.read_csv('../../data/Term2/capstone/arvato_data/Udacity_AZDIAS_05201
 customers = pd.read_csv('../../data/Term2/capstone/arvato_data/Udacity_CUSTOMERS_052018.csv', sep=';')
 
 
-# In[3]:
-
-
-azdias.shape
-
-
-# In[4]:
-
-
-customers.shape
-
-
-# In[7]:
 
 
 sns.countplot(azdias.isnull().sum())
 
-
-# In[8]:
-
-
 sns.countplot(customers.isnull().sum())
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
 
 # ## Part 1: Customer Segmentation Report
 # 
@@ -131,20 +93,6 @@ sns.countplot(customers.isnull().sum())
 # 
 # 
 # 
-
-# In[94]:
-
-
-customers.shape
-
-
-# In[38]:
-
-
-azdias.shape
-
-
-# In[91]:
 
 
 # convert all dtypes of int to float, and keep the object type - testing part
@@ -196,9 +144,6 @@ excell_attibutes_com.head()
 # Below is the loop to clean the azdias data by using the excel sheet provided and add a np.nan inplace of missing values that are being read from the excell_attibutes_com file
 # 
 
-# In[114]:
-
-
 #testing part
 for row in excell_attibutes_com['attribute']:
     print(row)
@@ -208,9 +153,6 @@ for row in excell_attibutes_com['attribute']:
         azdias.loc[na_idx, row] = np.nan
     else:
         continue
-
-
-# In[16]:
 
 
 def preprocess_df(df, att_df):
@@ -263,26 +205,13 @@ def preprocess_df(df, att_df):
     return df
 
 
-# In[7]:
-
 
 get_ipython().run_cell_magic('time', '', 'azdias_pre = preprocess_df(azdias, excell_attibutes_com)')
-
-
-# In[8]:
-
 
 get_ipython().run_cell_magic('time', '', 'customers_pre = preprocess_df(customers, excell_attibutes_com)')
 
 
-# In[9]:
-
-
 azdias_pre.shape
-
-
-# In[10]:
-
 
 customers_pre.shape
 
@@ -295,14 +224,6 @@ customers_pre.shape
 three_col_df_customer = customers_pre[['PRODUCT_GROUP', 'CUSTOMER_GROUP', 'ONLINE_PURCHASE']]
 three_col_df_customer.head()
 
-
-# In[18]:
-
-
-customers_pre.shape
-
-
-# In[12]:
 
 
 #for customer file only
@@ -330,32 +251,13 @@ def remove_cat(df):
     return df
 
 
-# In[14]:
-
 
 customers_pre_no_cat = clean_customer_after_pre(customers_pre)
 
-
-# In[15]:
-
-
 customers_pre_no_cat.shape
 
-
-# In[16]:
-
-
 azdias_pre_no_cat = remove_cat(azdias_pre)
-
-
-# In[17]:
-
-
 azdias_pre_no_cat.shape
-
-
-# In[ ]:
-
 
 # to better analyse and decide on the cat columns and see if to keep or remove entirly. 
 for col in azdias.columns[azdias.dtypes == 'object']:
@@ -369,19 +271,12 @@ for col in azdias.columns[azdias.dtypes == 'object']:
 # The below two function are used to choose the percentage and number of NaNs elements to be removed - also for testing before using the preprocessing function
 # 
 
-# In[86]:
-
-
 def choose_cut_off(df, percentage):
     #returns the cols that will be removed based on the % number placed in percentage
     cutt_off_30 = df.columns[df.isnull().sum() / df.shape[0] > percentage]           
     
     #columns to drop based on theshold chosen
     df.drop(cutt_off_30, axis=1, inplace=True)
-
-
-# In[ ]:
-
 
 def choose_cut_off_row(df, number):
     row_to_drop = df.index[df.isnull().sum(axis=1) > number]
@@ -394,9 +289,6 @@ def choose_cut_off_row(df, number):
 # 
 # Import and use pickle, to save and serlize the files for better space resources. After cleaning the files we will pickle them so they can be downloaded fast and to be used right away.
 
-# In[124]:
-
-
 #to upload cleaned files with pickle
 
 #pickle.dump(azdias, open("azdias_clean.pickle", "wb"))
@@ -404,8 +296,6 @@ def choose_cut_off_row(df, number):
 # Dump the customers dataframe to a pickle object to use for later.
 #pickle.dump(customers, open("customers_clean.pickle", "wb"))
 
-
-# In[2]:
 
 
 # to reload uploaded files back 
@@ -464,42 +354,12 @@ def impute(az_df, cust_df):
     return azdias_clean, customers_clean
 
 
-# In[21]:
-
-
-azdias_clean_pca_ready, customer_clean_pca_ready = impute(azdias_pre_no_cat, customers_pre_no_cat)
-
-
-# In[22]:
-
-
-azdias_clean_pca_ready.shape
-
-
-# In[23]:
-
-
-customer_clean_pca_ready.shape
-
-
-# In[24]:
-
-
-customer_clean_pca_ready.head()
-
-
-# In[25]:
-
-
-azdias_clean_pca_ready.head()
-
 
 # <b>Standardizing</b>
 # 
 # Before going ahead with the PCA, we need to ensure that both files are standardized and we will use the StandardScaler object here
 # 
 
-# In[26]:
 
 
 scaler = StandardScaler()
@@ -507,13 +367,11 @@ azdias_clean = pd.DataFrame(scaler.fit_transform(azdias_clean_pca_ready), column
 customers_clean = pd.DataFrame(scaler.transform(customer_clean_pca_ready), columns = customer_clean_pca_ready.columns)
 
 
-# In[27]:
 
 
 azdias_clean.head()
 
 
-# In[28]:
 
 
 customers_clean.head()
@@ -533,7 +391,6 @@ pickle.dump(azdias_clean, open("azdias_final.pickle", "wb"))
 pickle.dump(customers_clean, open("customers_final.pickle", "wb"))
 
 
-# In[4]:
 
 
 # Reload cleaned azdias object as saved after above analysis (may need to rerun imports)
@@ -543,13 +400,11 @@ azdias_clean = pickle.load(open("azdias_final.pickle", "rb"))
 customers_clean = pickle.load(open("customers_final.pickle", "rb"))
 
 
-# In[5]:
 
 
 azdias_clean.shape
 
 
-# In[6]:
 
 
 customers_clean.shape
@@ -559,25 +414,21 @@ customers_clean.shape
 # 
 # PCA here will help in reducing the feature space from 307 to 200. After plotting the new features of 200, we can calculate the sum of explained variance which comes to a total of 94% which is high and cover most of the data, and at least reduced it by 93 features
 
-# In[29]:
 
 
 pca = PCA(200)
 
 
-# In[30]:
 
 
 get_ipython().run_cell_magic('time', '', '\nazdias_pca_200 = pca.fit_transform(azdias_clean)')
 
 
-# In[31]:
 
 
 azdias_pca_200.shape
 
 
-# In[32]:
 
 
 sum(pca.explained_variance_ratio_)
@@ -589,7 +440,6 @@ sum(pca.explained_variance_ratio_)
 len(pca.components_)
 
 
-# In[34]:
 
 
 pca.components_.shape
@@ -602,7 +452,6 @@ pca.components_.shape
 # Based on that i have decided to go with 200 components.
 # 
 
-# In[8]:
 
 
 def com_plot(pca):
@@ -614,32 +463,27 @@ def com_plot(pca):
     plt.title('Explained Variance Per Principal Component')
 
 
-# In[9]:
 
 
 com_plot(pca)
 
 
-# In[35]:
 
 
 pca.components_
 
 
-# In[36]:
 
 
 components_200 = pca.components_
 
 
-# In[37]:
 
 
 components_200_df = pd.DataFrame(components_200, columns=azdias_clean.columns)
 components_200_df.head()
 
 
-# In[38]:
 
 
 #list comprehension to create the index
@@ -647,27 +491,22 @@ comp = ['comp_' + str(i)for i in components_200_df.index + 1]
 comp
 
 
-# In[39]:
-
 
 components_200_df.shape
 
 
 # At this stage i will create a DataFrame from the returned PCA object, after creating the DF then we can visualize the weights of each component and see the correlations between the features and if the provide any insight
 
-# In[40]:
 
 
 components_200_df.index = comp
 
 
-# In[41]:
 
 
 components_200_df.head()
 
 
-# In[42]:
 
 
 feature_names_comp = components_200_df.columns
@@ -678,7 +517,6 @@ feature_names_comp
 
 # <b> Explaining each component </b> and what are the attributes within, and how do they correlate or not , together.
 
-# In[43]:
 
 
 def display_comp2(components, component_number, weight_n):
@@ -706,7 +544,6 @@ def display_comp2(components, component_number, weight_n):
     
 
 
-# In[44]:
 
 
 display_comp2(components_200_df, 0, 10)
@@ -717,7 +554,6 @@ display_comp2(components_200_df, 0, 10)
 # with share of cars per household (KBA13_AUTOQUOTE)
 # 
 
-# In[50]:
 
 
 display_comp2(components_200_df, 1, 10)
@@ -726,7 +562,6 @@ display_comp2(components_200_df, 1, 10)
 # its seems that this component has many things to do with high end expensive cars that are related with each other like BMW, MERC, and sport car
 # but are not correlated with cars that have 5 seats(KBA13_SITZE_5)
 
-# In[24]:
 
 
 display_comp2(components_200_df, 2, 10)
@@ -735,7 +570,7 @@ display_comp2(components_200_df, 2, 10)
 # here the money saver (FINANZ_SPARER) and the unremarkable are highly
 # correlated (FINANZ_UNAUFFAELLIGER) and opposite them is the prepared(FINANZ_VORSORGER)
 
-# In[25]:
+
 
 
 display_comp2(components_200_df, 3, 10)
@@ -746,7 +581,6 @@ display_comp2(components_200_df, 3, 10)
 # Before staring a K means cluster, we need to find out what is the best cluster number and to do that we will perform the elbow method, and by plotting the results of the SSE, we can then choose the least SSE that makes sense to then cluster the kmeans with.
 # 
 
-# In[21]:
 
 
 ks = range(1, 10)
@@ -778,13 +612,11 @@ plt.show()
 
 # We start by creating a Kmeans object from sklearn, then choose the 7 cluster based on the plot above. We then fit the object to our PCA data and then re-run the kmeans using the predict. After fitting the kmeans object to population data then we use the predict function to come up with the cluster for the population data.
 
-# In[45]:
 
 
 get_ipython().run_cell_magic('time', '', '\nazdias_kmeans = KMeans(7)\nazdias_model = azdias_kmeans.fit(azdias_pca_200)# why did we fit here only\nazdias_labels = azdias_model.predict(azdias_pca_200)# why we ran the file again here in the predict? Osama')
 
 
-# In[123]:
 
 
 #a function to see the top weighst of each cluster
@@ -794,26 +626,13 @@ def explain_comp(cluster, n_weight):
     pd.concat((over_rep['feature_values'][:n_weight], over_rep['feature_values'][-n_weight:]), axis=0).plot(kind='barh')
 
 
-# In[124]:
 
 
 explain_comp(0, 10)
 
-
-# In[129]:
-
-
 explain_comp(5, 10)
 
-
-# In[130]:
-
-
 explain_comp(1, 10)
-
-
-# In[131]:
-
 
 explain_comp(6,10)
 
@@ -821,25 +640,15 @@ explain_comp(6,10)
 # Then we get the customer cleaned file and pass it to the pca object we created for the population file, and get back our customer PCA data.
 # we then use the newly formed kmeans object based on the population data and pass it to the predict function of kmeans and get the labels of predicted clusters for the customer data
 
-# In[58]:
 
 
 get_ipython().run_cell_magic('time', '', 'customer_pca_200 = pca.transform(customers_clean) #why did we use only tranform here and not fit_transform? osama')
 
 
-# In[91]:
-
-
 customer_pca_200.shape
 
 
-# In[60]:
-
-
 customer_labels = azdias_kmeans.predict(customer_pca_200)
-
-
-# In[ ]:
 
 
 print(azdias_final.shape)
@@ -852,7 +661,6 @@ print(customer_pca_200.shape)
 
 # <b>We now create a DataFrame for the azdias_pca_200 clusters with labels </b>
 
-# In[92]:
 
 
 azdias_cluster_df = pd.DataFrame(azdias_pca_200, columns=comp)
@@ -862,41 +670,22 @@ azdias_cluster_df.tail()
 
 # <b>We also create a DataFrame for the customer_200 clusters with labels </b>
 
-# In[93]:
 
 
 customer_cluster_df = pd.DataFrame(customer_pca_200, columns=comp)
 customer_cluster_df['cluster_labels'] = customer_labels
 customer_cluster_df.tail()
 
-
-# In[63]:
-
-
 customer_cluster_df.shape
 
-
-# In[64]:
-
-
 azdias_cluster_df.shape
-
-
-# In[65]:
-
 
 print(customer_cluster_df['cluster_labels'].value_counts())
 print(azdias_cluster_df['cluster_labels'].value_counts())
 
 
-# In[66]:
-
-
 label_count_customer = customer_cluster_df['cluster_labels'].value_counts()
 label_count_azdias = azdias_cluster_df['cluster_labels'].value_counts()
-
-
-# In[67]:
 
 
 plt.figure(figsize = (10,10))
@@ -912,48 +701,26 @@ plt.show()
 
 # Cluster 0 is the overrepresented, and i will reverse the PCA and scaler matrix back to its original numbers to better compare the means of the choosen features
 
-# In[95]:
-
 
 reverse_cluster_df_label_0 = customer_cluster_df[customer_cluster_df['cluster_labels'] == 0]
 reverse_cluster_df_label_0.head()
-
-
-# In[96]:
 
 
 reverse_cluster_df_label_0_droped = reverse_cluster_df_label_0.drop('cluster_labels', axis=1)
 cluster_0_pca = pca.inverse_transform(reverse_cluster_df_label_0_droped)
 cluster_0_scaler = scaler.inverse_transform(cluster_0_pca)
 
-
-# In[97]:
-
-
 cluster_0_final = pd.DataFrame(cluster_0_scaler, columns=customers_clean.columns)
 cluster_0_final.shape
 
 
-# In[135]:
-
-
 cluster_0_final.shape
-
-
-# In[137]:
 
 
 azdias_model.cluster_centers_[0].shape
 
 
-# In[138]:
-
-
 azdias_kmeans
-
-
-# In[98]:
-
 
 cluster_0_final[imp_cols].describe()
 
@@ -961,41 +728,24 @@ cluster_0_final[imp_cols].describe()
 # 
 # Now with the least represented cluster which is 2, we will do the same, reverse the PCA and scale back to the original choosen features and compare their means
 
-# In[99]:
 
 
 reverse_cluster_df_label_1 = customer_cluster_df[customer_cluster_df['cluster_labels'] == 1]
 reverse_cluster_df_label_1.head()
-
-
-# In[100]:
-
 
 reverse_cluster_df_label_1_droped = reverse_cluster_df_label_1.drop('cluster_labels', axis=1)
 cluster_1_pca = pca.inverse_transform(reverse_cluster_df_label_1_droped)
 cluster_1_scaler = scaler.inverse_transform(cluster_1_pca)
 
 
-# In[101]:
-
-
 cluster_1_scaler.shape
-
-
-# In[102]:
 
 
 cluster_1_final = pd.DataFrame(cluster_1_scaler, columns=customers_clean.columns)
 cluster_1_final.head()
 
 
-# In[104]:
-
-
 cluster_1_final[imp_cols].describe()
-
-
-# In[107]:
 
 
 over_rep = cluster_0_final[imp_cols].describe().loc['mean']
@@ -1005,19 +755,19 @@ under_rep = cluster_1_final[imp_cols].describe().loc['mean']
 under_rep
 
 
-# In[108]:
+
 
 
 clusters_2_and_mean = pd.concat([over_rep, under_rep], axis=1)
 
 
-# In[109]:
+
 
 
 clusters_2_and_mean.columns = ['Target', 'Not_Target']
 
 
-# In[114]:
+
 
 
 clusters_2_and_mean.head()
@@ -1025,7 +775,7 @@ clusters_2_and_mean.head()
 
 # <b> Compare the means and analyse which features shows a high difference between the target group and the non-target group<b/>
 
-# In[116]:
+
 
 
 fig, ax = plt.subplots(figsize=(20,12))
@@ -1061,13 +811,13 @@ plt.xticks(rotation=45)
 # We will be using a Heatmap to better explain the correlation between the clusters and the components, and also prepare the data from the kmeans model. 
 # 
 
-# In[35]:
+
 
 
 azdias_model.cluster_centers_.shape
 
 
-# In[ ]:
+
 
 
 plt.figure(figsize = (20,12))
@@ -1080,20 +830,20 @@ ax.set_title("Attribute Value by Centroid")
 plt.show()
 
 
-# In[164]:
+
 
 
 t = pca.inverse_transform(azdias_model.cluster_centers_)
 
 
-# In[171]:
+
 
 
 t2 = pd.DataFrame(t, columns=azdias_clean.columns)
 t2
 
 
-# In[173]:
+
 
 
 plt.figure(figsize = (25,30))
@@ -1116,7 +866,7 @@ plt.show()
 #     
 #     
 
-# In[101]:
+
 
 
 display_comp2(components_200_df, 2, 10)
@@ -1126,7 +876,7 @@ display_comp2(components_200_df, 2, 10)
 # 
 # 
 
-# In[144]:
+
 
 
 display_comp2(components_200_df, 1, 10)
@@ -1134,13 +884,13 @@ display_comp2(components_200_df, 1, 10)
 
 # 
 
-# In[133]:
+
 
 
 display_comp2(components_200_df, 0, 10)
 
 
-# In[ ]:
+
 
 
 
@@ -1152,19 +902,19 @@ display_comp2(components_200_df, 0, 10)
 # 
 # The "MAILOUT" data has been split into two approximately equal parts, each with almost 43 000 data rows. In this part, you can verify your model with the "TRAIN" partition, which includes a column, "RESPONSE", that states whether or not a person became a customer of the company following the campaign. In the next part, you'll need to create predictions on the "TEST" partition, where the "RESPONSE" column has been withheld.
 
-# In[2]:
+
 
 
 mailout_train = pd.read_csv('../../data/Term2/capstone/arvato_data/Udacity_MAILOUT_052018_TRAIN.csv', sep=';')
 
 
-# In[3]:
+
 
 
 mailout_train.shape
 
 
-# In[4]:
+
 
 
 mailout_train.columns
@@ -1175,32 +925,32 @@ mailout_train.columns
 # When reviewing the RESPONSE variable we can see clearly that its imbalanced, the Positive is 1.2% only of the total. Based on such a response percentage a accuracy metric must be chosen accordingly. The best suited is the ROC. The ROC will show clearly the TP and TN ratios. If we used another metric these details won’t show. Due to the imbalance, the model will be biased.
 # 
 
-# In[5]:
+
 
 
 mailout_train['RESPONSE'].unique()
 
 
-# In[6]:
+
 
 
 #checking the Response ratio
 mailout_train['RESPONSE'].value_counts()
 
 
-# In[7]:
+
 
 
 mailout_train['RESPONSE'].unique()
 
 
-# In[8]:
+
 
 
 mailout_train['RESPONSE'].value_counts()
 
 
-# In[8]:
+
 
 
 #to see if response variable is balanced or not
@@ -1209,7 +959,6 @@ num_of_row = mailout_train.shape[0]
 num_of_row
 
 
-# In[9]:
 
 
 #the response ratio is vert low and hence needs further metrics
@@ -1224,20 +973,20 @@ num_of_row
 # After these steps we can proceed with testing out which classifier best fits the data.
 # 
 
-# In[11]:
+
 
 
 # highly imbalanced data set
 sns.countplot(mailout_train['RESPONSE'])
 
 
-# In[15]:
+
 
 
 mailout_train.shape
 
 
-# In[12]:
+
 
 
 #read in the file, same process used before
@@ -1262,7 +1011,7 @@ excell_attibutes_com.columns= ['attribute', 'missing_or_unknown']
 excell_attibutes_com.head()
 
 
-# In[13]:
+
 
 
 def preprocess_df_for_ML(df, att_df):
@@ -1315,7 +1064,7 @@ def preprocess_df_for_ML(df, att_df):
     return df
 
 
-# In[15]:
+
 
 
 #we must preprocess the data first
@@ -1325,26 +1074,26 @@ mailout_train_pre.head()
 
 # <b>Remove the Categorical cols</b>
 
-# In[23]:
+
 
 
 cat_to_remove = mailout_train_pre.columns[mailout_train_pre.dtypes == 'object']
 cat_to_remove
 
 
-# In[24]:
+
 
 
 mailout_train_pre_nocat = mailout_train_pre.drop(cat_to_remove, axis=1)
 
 
-# In[25]:
+
 
 
 mailout_train_pre_nocat.drop('RESPONSE', axis=1, inplace=True)
 
 
-# In[26]:
+
 
 
 mailout_train_pre_nocat.shape
@@ -1354,7 +1103,7 @@ mailout_train_pre_nocat.shape
 # 
 # Start by creating the objects to impute and standardize the data, and then i create the pipeline object that will help in processing the files in better fashion.
 
-# In[27]:
+
 
 
 #ini imputer and scaler objects with default param
@@ -1362,7 +1111,7 @@ imputer  = Imputer()
 scaler = StandardScaler()
 
 
-# In[28]:
+
 
 
 def create_piping_object():
@@ -1374,7 +1123,7 @@ def create_piping_object():
     return pipe
 
 
-# In[29]:
+
 
 
 piper = create_piping_object()
@@ -1382,13 +1131,13 @@ piper = create_piping_object()
 
 # Pipeline object ready to be used to transform any Data Frame
 
-# In[30]:
+
 
 
 piper
 
 
-# In[31]:
+
 
 
 mailout_ready_piped = piper.fit_transform(mailout_train_pre_nocat)
@@ -1396,19 +1145,19 @@ mailout_ready_piped = piper.fit_transform(mailout_train_pre_nocat)
 
 # Convert the numpy matrix to DF for better readability
 
-# In[32]:
+
 
 
 mailout_ready_piped_df = pd.DataFrame(mailout_ready_piped, columns=mailout_train_pre_nocat.columns)
 
 
-# In[33]:
+
 
 
 mailout_ready_piped_df.shape
 
 
-# In[34]:
+
 
 
 mailout_train_pre['RESPONSE'].head()
@@ -1432,7 +1181,7 @@ mailout_train_pre['RESPONSE'].head()
 # GradientBoostingClassifier - 
 # LogisticRegressionCV 
 
-# In[35]:
+
 
 
 #function to test out the baseline and other classifiers
@@ -1457,13 +1206,13 @@ def run_algo_2(X_df, y_df):
 
 # After testing the three classifers, GradientBoostingClassifier shows ths highest ROC score at 75%
 
-# In[83]:
+
 
 
 get_ipython().run_cell_magic('time', '', "run_algo_2(mailout_ready_piped_df, mailout_train['RESPONSE'])")
 
 
-# In[104]:
+
 
 
 score_list.values()
@@ -1473,7 +1222,7 @@ score_list.values()
 # At this stage we try different hyper parameters to increase our score a little further if possible
 # 
 
-# In[ ]:
+
 
 
 #below is the params to test for and see the best predictor
@@ -1483,32 +1232,32 @@ param_grid = {'learning_rate':[0.1, 0.2],
               'min_samples_split': [2, 4]}
 
 
-# In[26]:
+
 
 
 get_ipython().run_cell_magic('time', '', "grid = GridSearchCV(GradientBoostingClassifier(random_state=28), param_grid, scoring='roc_auc', cv=5, n_jobs=-1)")
 
 
-# In[27]:
+
 
 
 grid.fit(mailout_ready_piped_df, mailout_train['RESPONSE'])
 
 
-# In[28]:
+
 
 
 #to see all params that can be evaulated 
 grid.best_estimator_
 
 
-# In[30]:
+
 
 
 grid.best_score_
 
 
-# In[29]:
+
 
 
 #these are the best param choosen by the model. These will be used later to ini the new model.
@@ -1522,7 +1271,6 @@ grid.best_params_
 # After choosing the model, i ran a grid search to come up with the best parameters. Hence to initiate the model with the new parameters.
 # 
 
-# In[36]:
 
 
 #ini the model with best param
@@ -1531,7 +1279,7 @@ GBC_tuned = GradientBoostingClassifier(learning_rate=0.1,
                                       n_estimators=100)
 
 
-# In[37]:
+
 
 
 get_ipython().run_cell_magic('time', '', "GBC_tuned.fit(mailout_ready_piped_df, mailout_train['RESPONSE'])")
@@ -1543,7 +1291,7 @@ get_ipython().run_cell_magic('time', '', "GBC_tuned.fit(mailout_ready_piped_df, 
 # 
 # Your entry to the competition should be a CSV file with two columns. The first column should be a copy of "LNR", which acts as an ID number for each individual in the "TEST" partition. The second column, "RESPONSE", should be some measure of how likely each individual became a customer – this might not be a straightforward probability. As you should have found in Part 2, there is a large output class imbalance, where most individuals did not respond to the mailout. Thus, predicting individual classes and using accuracy does not seem to be an appropriate performance evaluation method. Instead, the competition will be using AUC to evaluate performance. The exact values of the "RESPONSE" column do not matter as much: only that the higher values try to capture as many of the actual customers as possible, early in the ROC curve sweep.
 
-# In[38]:
+
 
 
 mailout_test = pd.read_csv('../../data/Term2/capstone/arvato_data/Udacity_MAILOUT_052018_TEST.csv', sep=';')
@@ -1556,39 +1304,39 @@ mailout_test = pd.read_csv('../../data/Term2/capstone/arvato_data/Udacity_MAILOU
 # After cleaning the mailout_test file, then we can use our model and predict the response variable.
 # 
 
-# In[39]:
+
 
 
 mailout_test.shape
 
 
-# In[40]:
+
 
 
 #checking if the df has nans
 mailout_test.isnull().sum().head()
 
 
-# In[42]:
+
 
 
 mailout_test.head()
 
 
-# In[43]:
+
 
 
 #re reun the function to clean the file
 mailout_test_pre = preprocess_df_for_ML(mailout_test, excell_attibutes_com)
 
 
-# In[44]:
+
 
 
 mailout_test_pre.shape
 
 
-# In[45]:
+
 
 
 #Remove the catigorical features
@@ -1596,39 +1344,38 @@ cat_to_remove = mailout_test_pre.columns[mailout_test_pre.dtypes == 'object']
 cat_to_remove
 
 
-# In[46]:
+
 
 
 mailout_test_pre_no_cat = mailout_test_pre.drop(cat_to_remove, axis=1)
 
 
-# In[47]:
+
 
 
 #checking the shape of the df, to make sure its like the mailout_train
 mailout_test_pre_no_cat.shape
 
 
-# In[157]:
+
 
 
 print(mailout_test_pre.columns)
 
 
-# In[48]:
 
 
 #reuse the pipeline to impute and scale
 mailout_test_piped = piper.fit_transform(mailout_test_pre_no_cat)
 
 
-# In[49]:
+
 
 
 mailout_test_piped.shape
 
 
-# In[56]:
+
 
 
 #output is in a matrix numpy format
@@ -1638,7 +1385,7 @@ mailout_test_piped
 # <b> Transformation </b>
 # Transform the imputed and scaled matrix to DF format
 
-# In[50]:
+
 
 
 mailout_test_piped_df = pd.DataFrame(mailout_test_piped, columns=mailout_test_pre_no_cat.columns)
@@ -1646,39 +1393,39 @@ mailout_test_piped_df = pd.DataFrame(mailout_test_piped, columns=mailout_test_pr
 
 # Use the model to predict the responce variable based on our mailout_test file
 
-# In[51]:
+
 
 
 #using predict_proba to get a probabilty as a response
 pred = GBC_tuned.predict_proba(mailout_test_piped_df)
 
 
-# In[104]:
+:
 
 
 pred_Df = pd.DataFrame(index=mailout_test['LNR'], data=pred)
 
 
-# In[105]:
+
 
 
 pred_Df.rename(index=str, columns={0:'First', 1:'Response'}, inplace=True)
 # so go for 0 or 1 as a response
 
 
-# In[111]:
+
 
 
 pred_Df.head()
 
 
-# In[112]:
+
 
 
 pred_Df.drop('First', axis=1, inplace=True)
 
 
-# In[113]:
+
 
 
 #save file as csv for submission
@@ -1690,14 +1437,12 @@ for_submission = pred_Df.to_csv('kaggle_submit.csv', index=False)
 # At this stage we can use the methods available in the model to see the most important features by weight 
 # 
 
-# In[57]:
 
 
 #check the len of features is the same as cols
 len(GBC_tuned.feature_importances_)
 
 
-# In[94]:
 
 
 #function to display the most important features of the classifier
@@ -1712,7 +1457,6 @@ def feature_display(clf):
                     y = 'weights')
 
 
-# In[95]:
 
 
 feature_display(GBC_tuned) # evaulate the best split - read about these features when highest are what they carry as attrubites
@@ -1722,104 +1466,6 @@ feature_display(GBC_tuned) # evaulate the best split - read about these features
 # 
 # The above plot shows that SEMIO_RAT is the largest weight the separates the data at best. Second comes the next in line, RETOURTYP_BK_S. These features with the highest weighs best explain how the tree is splitting the customer as a high response or low response. 
 # 
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[159]:
-
-
-
-
-
-# In[81]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[184]:
 
 
 def feature_plot(importances, X_train, y_train, num_feat=5):
@@ -1843,19 +1489,11 @@ def feature_plot(importances, X_train, y_train, num_feat=5):
     plt.show()
 
 
-# In[ ]:
-
-
-
-
-
-# In[47]:
 
 
 GradientBoostingClassifier.feature_importances_
 
 
-# In[ ]:
 
 
 # finish the project report, export image to explain better on the report
