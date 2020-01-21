@@ -1,2 +1,2 @@
 #awsome
-![alt test](screenshots/download (4))
+![alt test](images/download (4))
