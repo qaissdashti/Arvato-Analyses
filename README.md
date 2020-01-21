@@ -72,6 +72,9 @@ The elbow method and the sum of squares errors was used to choose the K. The bes
 The heat map was used to see the negative and positive correlations between the features and the clusters. 
 The components with the highest and lowest weights explain the similar and dissimilar cluster do make sense.
 
+![Heat map](images/heat.png)
+
+
 
 
 
