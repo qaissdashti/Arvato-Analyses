@@ -5,6 +5,7 @@
 <b> Datasets and Inputs</b>
 <b> My Questions </b>
 <b> Data Science Approuch</b>
+<b>Algo used:</b>
 <b>My findings</b>
 <b>Acknowledgments and thanks</b>
 
@@ -56,6 +57,22 @@ To separate customer, we will be using Kmeans and PCA. PCA will be used to reduc
 Kmeans here will cluster the population based on similar attributes. This model will then be fitted to both files and see what are the similarities between them, and what feature affect the most. These feature will also provide insight into what is a Arvato customer profile and what is the population profile is. This should also help in advertising for the right customer and reduce mail costs when implemented later. 
 The second part of the problem being addressed is the predicting of who will likely be more interested in receiving a mail campaign of the population:
 This part will require a file that already has customers who got mailed and who responded or not responded to the campaign. Using such a file will require the use of machine learning to fit a model on customers who responded. Then by using unseen data, we can predict the probability of a customer responding to the mail campaign. This problem is different from the first, this is a supervised problem and the first is unsupervised. 
+
+<b>Algo used:</b>
+Algorithms and Techniques
+For the Unsupervised part of the problem, PCA was chosen due to the large size of the features, and Kmeans is required to cluster the customers and the population. Both PCA and Kmeans default parameters where kept just to explore the data. But after some exploring, the PCA component where chosen and Kmeans K too.
+As for the Supervised part, all the model used are:
+AdaBoostClassifier
+GradientBoostingClassifier
+LogisticRegression
+
+<b>My findings</b>
+The Unsupervised requires its own metrics, for identifying the K in Kmeans and the correlation in the features related to each cluster. 
+The elbow method and the sum of squares errors was used to choose the K. The best cluster was 7.
+The heat map was used to see the negative and positive correlations between the features and the clusters. 
+The components with the highest and lowest weights explain the similar and dissimilar cluster do make sense.
+
+
 
 
 
