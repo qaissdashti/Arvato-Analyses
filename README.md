@@ -76,6 +76,9 @@ Below is the heat map showing each feature and how it correlates to the cluster.
 
 ![Heat map](images/heat.png)
 
+<b>Acknowledgments and thanks</b>
+Thanks for Avarto company in providing the data for analyses, and also thanks to Udacity team for there support.
+
 
 
 
